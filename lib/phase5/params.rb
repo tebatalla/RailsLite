@@ -1,4 +1,5 @@
 require 'uri'
+require 'byebug'
 
 module Phase5
   class Params
@@ -10,9 +11,13 @@ module Phase5
     # You haven't done routing yet; but assume route params will be
     # passed in as a hash to `Params.new` as below:
     def initialize(req, route_params = {})
+      @params = parse_www_encoded_form(req.query_string)
+        .merge(parse_www_encoded_form(req.body))
+        .merge(route_params)
     end
 
     def [](key)
+      @params[key.to_s]
     end
 
     def to_s
@@ -28,11 +33,27 @@ module Phase5
     # should return
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
     def parse_www_encoded_form(www_encoded_form)
+      params = {}
+      base = {}
+      unless www_encoded_form.nil?
+        www_encoded_form.split('&').each do |keyval|
+          keys, val = keyval.split('=')
+          keys = parse_key(keys)
+          base[keys.pop] = val
+          hash = base
+          until keys.empty?
+            hash[keys.pop] = hash
+          end
+          params.merge!(hash)
+        end
+      end
+      params
     end
 
     # this should return an array
     # user[address][street] should return ['user', 'address', 'street']
     def parse_key(key)
+      key.split(/\]\[|\[|\]/)
     end
   end
 end

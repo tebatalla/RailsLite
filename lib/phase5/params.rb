@@ -34,17 +34,17 @@ module Phase5
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
     def parse_www_encoded_form(www_encoded_form)
       params = {}
-      base = {}
-      unless www_encoded_form.nil?
-        www_encoded_form.split('&').each do |keyval|
-          keys, val = keyval.split('=')
-          keys = parse_key(keys)
-          base[keys.pop] = val
-          hash = base
-          until keys.empty?
-            hash[keys.pop] = hash
+      return params if www_encoded_form.nil?
+      URI::decode_www_form(www_encoded_form).each do |keys, val|
+        current_node = params
+        keys_array = parse_key(keys)
+        keys_array.each_with_index do |key, i|
+          if i == keys_array.length - 1
+            current_node[key] = val
+          else
+            current_node[key] ||= {}
+            current_node = current_node[key]
           end
-          params.merge!(hash)
         end
       end
       params

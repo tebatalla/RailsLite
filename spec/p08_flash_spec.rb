@@ -34,7 +34,7 @@ describe Phase7::Flash do
 
       it "reads the pre-existing cookie data into hash" do
         flash = Phase7::Flash.new(req)
-        flash['pho'].should == 'soup'
+        JSON.parse(flash.cookie.value)['pho'].should == 'soup'
       end
     end
   end
@@ -80,10 +80,9 @@ describe Phase7::ControllerBase do
     res = WEBrick::HTTPResponse.new(HTTPVersion: '1.0')
     cats_controller = CatsController.new(req, res)
     cats_controller.flash.now['test_key'] = 'test_value'
-    cats_controller.send(method, *args)
+    cats_controller.send(:render_content, *['test', 'text/plain'])
     cookie = res.cookies.find { |c| c.name == '_rails_lite_app_flash' }
-    h = JSON.parse(cookie.value)
-    expect(h['test_key']).to be_nil
+    expect(cookie.expires).to be < (Time.now - 60)
     expect(cats_controller.flash.now['test_key']).to eq('test_value')
   end
 

@@ -1,4 +1,5 @@
 require_relative '../phase5/controller_base'
+require_relative './router'
 require 'byebug'
 
 module Phase6

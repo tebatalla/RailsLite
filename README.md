@@ -1,20 +1,36 @@
-# w5d2: [Rails Lite!][description]
+# Rails Lite!
 
-## Using The Specs
+A lite version of Rails. Features include:
+- Template rendering and redirects
+- Session cookies
+- Route parameters
+- A few RESTful routes by default (`:get, :post, :put, :delete`)
 
-Some specs have been written to guide you towards the lite. There are
-rspec specs in the `spec` directory and demo servers for you to try
-in the `bin` directory.
+## Installation
+Use `WEBrick` to start a simple server
+```ruby
+server = WEBrick::HTTPServer.new(Port: 3000)
+server.mount_proc('/') do |req, res|
+  route = router.run(req, res)
+end
 
-## Suggested Order
+trap('INT') { server.shutdown }
+server.start
+```
 
-0.  `bundle exec rspec spec/p02_controller_spec.rb`
-0.  `bundle exec rspec spec/p03_template_spec.rb`
-0.  `bundle exec rspec spec/p04_session_spec.rb`
-0.  `bundle exec rspec spec/p05_params_spec.rb`
-0.  `bundle exec rspec spec/p06_router_spec.rb`
-0.  `bundle exec rspec spec/p07_integration_spec.rb`
+Create controller classes by inheriting from `ControllerBase`
+```ruby
+class FooController < ControllerBase
+  def index
+    render_content(foo, "text/html")
+  end
+end
+```
 
-Run `bundle exec rspec` to run all the spec files.
-
-[description]: https://github.com/appacademy/rails-curriculum/blob/master/projects/w5d2-rails-lite-i.md
+Use the `Router` class to create routes for your controllers
+```ruby
+router = Router.new
+router.draw do
+  get Regexp.new("^/foo$"), FooController, :index
+end
+```

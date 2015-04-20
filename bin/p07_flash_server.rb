@@ -1,5 +1,5 @@
 require 'webrick'
-require_relative '../lib/phase7/controller_base'
+require_relative '../lib/controller_base'
 require 'byebug'
 
 $cats = [
@@ -15,26 +15,26 @@ $statuses = [
 
 $toggle = false
 
-class Statuses1Controller < Phase7::ControllerBase
+class Statuses1Controller < ControllerBase
   def index
     statuses = $statuses.select do |s|
       s[:cat_id] == Integer(params[:cat_id])
     end
 
-    render_content(statuses.to_s, "text/text")
+    render_content(statuses.to_s, "text/html")
   end
 end
 
-class Cats3Controller < Phase7::ControllerBase
+class Cats3Controller < ControllerBase
   def index
     flash[:errors] = ["whaaaat"] if $toggle
-    render_content($cats.to_s, "text/text")
+    render_content($cats.to_s, "text/html")
     $toggle = !$toggle
     # redirect_to('/cats/1/statuses')
   end
 end
 
-router = Phase6::Router.new
+router = Router.new
 router.draw do
   get Regexp.new("^/cats$"), Cats3Controller, :index
   get Regexp.new("^/cats/(?<cat_id>\\d+)/statuses$"), Statuses1Controller, :index

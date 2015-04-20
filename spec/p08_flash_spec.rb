@@ -1,8 +1,8 @@
 require 'webrick'
-require 'phase7/flash'
-require 'phase7/controller_base'
+require 'flash'
+require 'controller_base'
 
-describe Phase7::Flash do
+describe Flash do
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
   let(:cook) { WEBrick::Cookie.new('_rails_lite_app_flash_flash', { xyz: 'abc' }.to_json) }
@@ -10,7 +10,7 @@ describe Phase7::Flash do
   describe "#store_flash" do
     context "without cookies in request" do
       before(:each) do
-        flash = Phase7::Flash.new(req)
+        flash = Flash.new(req)
         flash['first_key'] = 'first_val'
         flash.store_flash(res)
       end
@@ -33,16 +33,16 @@ describe Phase7::Flash do
       end
 
       it "reads the pre-existing cookie data into hash" do
-        flash = Phase7::Flash.new(req)
+        flash = Flash.new(req)
         JSON.parse(flash.cookie.value)['pho'].should == 'soup'
       end
     end
   end
 end
 
-describe Phase7::ControllerBase do
+describe ControllerBase do
   before(:all) do
-    class CatsController < Phase7::ControllerBase
+    class CatsController < ControllerBase
     end
   end
   after(:all) { Object.send(:remove_const, "CatsController") }
@@ -53,7 +53,7 @@ describe Phase7::ControllerBase do
 
   describe "#flash" do
     it "returns a flash instance" do
-      expect(cats_controller.flash).to be_a(Phase7::Flash)
+      expect(cats_controller.flash).to be_a(Flash)
     end
 
   end

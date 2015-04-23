@@ -22,7 +22,7 @@ Create controller classes by inheriting from `ControllerBase`
 ```ruby
 class FooController < ControllerBase
   def index
-    render_content(foo, "text/html")
+    render index
   end
 end
 ```
@@ -33,4 +33,11 @@ router = Router.new
 router.draw do
   get Regexp.new("^/foo$"), FooController, :index
 end
+```
+
+Create views for your controller actions by creating views in `{controller_name}/{action}`, using ERB.
+```html_ruby
+<h1>Foos</h1>
+<pre><%= @foos %></pre>
+<a href="/foos/new">New foo!</a>
 ```

@@ -23,7 +23,8 @@ Require the following files in order to inherit controller actions and model act
 require_relative '../lib/controller_base'
 require_relative '../ActiveRecordLite/lib/active_record_lite'
 ```
-Use [db_connection.rb](./ActiveRecordLite/lib/db_connection.rb) to create a database connection. You'll need to create a database. `db_connection.rb` is set up to use sqllite3. [cats.sql](./ActiveRecordLite/cats.sql) is a seed file you can use to seed a sample database (of cats).
+Use [db_connection.rb](./ActiveRecordLite/lib/db_connection.rb) to create a database connection. `db_connection.rb` is set up to use sqllite3. Simply replace the cat names to create a db.
+[cats.sql](./ActiveRecordLite/cats.sql) is a seed file you can use to seed a sample database (of cats).
 
 ## Using Rails Lite
 
@@ -34,6 +35,16 @@ class Foo < ActiveRecordLite
   finalize!
 end
 ```
+`ActiveRecordLite` uses meta-programming to create methods based on the column names of your tables. So, if you have a column named `name`, calling `#name` on an `ActiveRecordLite` object will return the name value. Other methods include:
+- `#find`
+- `#all`
+- `#attribute_values`
+- `#update`
+- `#save`
+- `#where`
+- `#belongs_to`
+- `#has_many`
+- `#has_one_through`
 
 Create controller classes by inheriting from `ControllerBase`
 ```ruby
@@ -44,6 +55,7 @@ class FooController < ControllerBase
   end
 end
 ```
+[Session](./lib/session.rb) and [flash](./lib/flash.rb) functionality available.
 
 Use the `Router` class to create routes for your controllers
 ```ruby

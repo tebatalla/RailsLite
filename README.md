@@ -1,6 +1,7 @@
 # Rails Lite!
 
 A lite version of Rails. Features include:
+- ActiveRecord Lite! Query a database and create associations with ActiveRecord like methods
 - Template rendering and redirects
 - Session cookies
 - Route parameters
@@ -17,11 +18,28 @@ end
 trap('INT') { server.shutdown }
 server.start
 ```
+Require the following files in order to inherit controller actions and model actions respectively
+```ruby
+require_relative '../lib/controller_base'
+require_relative '../ActiveRecordLite/lib/active_record_lite'
+```
+Use [db_connection.rb](./ActiveRecordLite/lib/db_connection.rb) to create a database connection. You'll need to create a database. `db_connection.rb` is set up to use sqllite3. [cats.sql](./ActiveRecordLite/cats.sql) is a seed file you can use to seed a sample database (of cats).
+
+## Using Rails Lite
+
+Create ActiveRecordLite classes by inheriting from the `ActiveRecordLite` Class. You must call `finalize!` in order to define column methods
+```ruby
+class Foo < ActiveRecordLite
+  
+  finalize!
+end
+```
 
 Create controller classes by inheriting from `ControllerBase`
 ```ruby
 class FooController < ControllerBase
   def index
+    @foo = Foo.all
     render index
   end
 end

@@ -9,8 +9,6 @@ require_relative 'router'
 require_relative 'session'
 
 class ControllerBase
-  # use ERB and binding to evaluate templates
-  # pass the rendered html to render_content
   attr_reader :req, :res, :params
 
   def initialize(req, res, route_params = {})
@@ -19,17 +17,14 @@ class ControllerBase
     @params = Params.new(req, route_params)
   end
 
-  # method exposing a `Session` object
   def session
     @session ||= Session.new(req)
   end
 
-  # Helper method to alias @already_built_response
   def already_built_response?
     @already_built_response ||= false
   end
 
-  # Set the response status code and header
   def redirect_to(url)
     flash.store_flash(res)
     unless already_built_response?

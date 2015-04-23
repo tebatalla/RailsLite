@@ -9,7 +9,7 @@ class AssocOptions
   )
 
   def model_class
-    self.class_name.constantize
+    class_name.constantize
   end
 
   def table_name
@@ -26,7 +26,7 @@ class BelongsToOptions < AssocOptions
     }
 
     defaults.merge(options).each do |k, v|
-      self.send("#{k}=", v)
+      send("#{k}=", v)
     end
   end
 end
@@ -40,7 +40,7 @@ class HasManyOptions < AssocOptions
     }
 
     defaults.merge(options).each do |k, v|
-      self.send("#{k}=", v)
+      send("#{k}=", v)
     end
   end
 end
